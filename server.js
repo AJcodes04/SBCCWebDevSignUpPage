@@ -3,6 +3,9 @@ const bodyParser = require('body-parser');
 const fs = require('fs');
 const path = require('path');
 
+const dataFilePath = path.join(process.cwd(), 'data.json');
+
+
 const app = express();
 const port = 3000;
 
