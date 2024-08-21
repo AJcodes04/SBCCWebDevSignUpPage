@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SBCC Web Dev</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Righteous&display=swap">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+        <link rel="stylesheet" href="./style.css">
+    <style>
+        /* Style for the title font */
+        
+.footer {
+    color: white;
+    text-align: center;
+    overflow: hidden;
+    position: relative;
+    height: 75px;
+    display: flex;
+    align-items: center;
+}
+
+.footer-content-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    white-space: nowrap;
+    animation: scroll-left 100s linear infinite;
+}
+
+.footer-content {
+    display: flex;
+    align-items: center;
+}
+
+.footer img {
+    height: 60px;
+    margin: 0 32px;
+}
+        .big-bold-title {
+            font-family: 'Righteous', cursive;
+            font-size: 2rem;
+            font-weight: bold;
+            padding-left: 15px;
+        }
+
+        /* Style for the navbar items */
+        .nav-item {
+            padding-right: 40px;
+            padding-top: 10px;
+        }
+
+        /* Hero section background and layout styles */
+        .hero-section {
+            background: url('./Beach-drawing.png') no-repeat center center/cover;
+            position: relative;
+            z-index: 1;
+            min-height: 400px;
+        }
+
+        /* Media query for larger screens */
+        @media (min-width: 768px) {
+            .hero-section {
+                background: url('./background-images/Beach-drawing.png') no-repeat center center/cover;
+                padding-top: 100px;
+                padding-bottom: 100px;
+                min-height: 600px;
+                /* Adjust this value as needed */
+            }
+        }
+
+        /* Dark overlay for better text visibility */
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            /* Adds a dark overlay for better text visibility */
+            z-index: -1;
+        }
+
+        /* Custom checkbox styles */
+        .custom-checkbox input:checked~.checkmark {
+            background-color: #ff69b4;
+        }
+
+        /* Style for the register box text */
+        .register-box .form-label,
+        .register-box .form-control,
+        .register-box .btn,
+        .register-box p,
+        .register-box h2 {
+            color: #000;
+            /* Set text color to black */
+        }
+        @keyframes scroll-left {
+    0% {
+        transform: translateX(0%);
+    }
+
+    100% {
+        transform: translateX(-100%);
+    }
+}
+    </style>
+</head>
+
+<body>
+
+
+    <div class="container">
+        <!-- Header section with navigation -->
+        <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
+            <div class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none">
+                <img src="./background-images/SBCCNObg.png" height="65px" padding="3px">
+                <span class="big-bold-title"> SBCC Web Development Club </span>
+            </div>
+            <ul class="nav nav-pills">
+                <li class="nav-item"><a href="https://discord.gg/VgxP2hGRnb" class="nav-link active"
+                        aria-current="page"><img src="./svg/discord.svg" height="25px"> Join our Discord</a></li>
+            </ul>
+        </header>
+    </div>
+
+
+    <!-- Hero section with background image and overlay -->
+    <section id="register"class="hero-section py-8 px-4 mx-auto max-w-screen-xl">
+        <div class="container">
+            <div class="row align-items-center g-4">
+                <div class="col-lg-8 mb-4">
+                    <h1 class="mb-4 text-white fw-bold">A SBCC Web Development Community</h1>
+                    <p class="mb-6 text-white">A club where SBCC students can learn and build websites. No worries if you
+                        don't know how to code. Join workshops or simply contribute by sharing website ideas that benefit
+                        the SBCC community.</p>
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault">
+                        <label class="form-check-label text-white" for="flexSwitchCheckDefault" id="flexSwitchCheckLabel">I want to join
+                            the club</label>
+                    </div>
+                    <ul class="pt-4 mt-4 border-top border-light text-white list-unstyled d-flex justify-content-between">
+                        <li class="d-flex flex-column text-center"><span class="display-4 fw-bold">0</span><span>Our Active
+                                Users</span></li>
+                        <li class="d-flex flex-column text-center"><span class="display-4 fw-bold">3</span><span>Student
+                                Creators and Developers</span></li>
+                        <li class="d-flex flex-column text-center"><span class="display-4 fw-bold">0</span><span>Websites
+                                Built</span></li>
+                    </ul>
+                </div>
+<!-- Registration form section -->
+                <div class="col-lg-4 bg-white p-4 rounded shadow register-box mt-4">
+                    <form action="/register" method="POST" id="registerForm">
+                        <h2 class="text-center mb-4">I want to be a</h2>
+                        <div class="d-flex mb-4">
+                            <button type="button" class="btn btn-pink w-50 me-2" id="member-btn">Member</button>
+                            <button type="button" class="btn btn-secondary w-50" id="officer-btn">Officer</button>
+                        </div>
+                        <input type="hidden" id="role" name="role" value="">
+                
+                        <!-- First Name Field -->
+                        <div class="mb-4">
+                            <label for="first-name" class="form-label">First Name</label>
+                            <input type="text" class="form-control text-white" id="first-name" name="firstName" placeholder="Your first name"
+                                required>
+                        </div>
+                
+                        <!-- Last Name Field -->
+                        <div class="mb-4">
+                            <label for="last-name" class="form-label ">Last Name</label>
+                            <input type="text" class="form-control text-white" id="last-name" name="lastName" placeholder="Your last name"
+                                required>
+                        </div>
+                
+                        <!-- Email Field -->
+                        <div class="mb-4">
+                            <label for="email" class="form-label">Your email</label>
+                            <input type="email" class="form-control text-white" id="email" name="email"
+                                placeholder="youremail@pipeline.sbcc.edu" required>
+                        </div>
+                
+                        <button type="submit" class="btn btn-success w-100">Register</button>
+                    </form>
+                
+                    <div id="loadingSpinner" class="text-center mt-4" style="display: none;">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                        <p class="text-center mt-4">Submitting your registration...</p>
+                    </div>
+                
+                    <p class="text-center mt-4">By clicking register you are agreeing to a soul binding contract</p>
+                </div>
+
+            </div>
+        </div>
+        </section>
+
+        <section id="features" class="py-5">
+        
+            <div class="container col-l-8 px-4 py-5" id="hanging-icons">
+                <h2 class="pb-2 border-bottom display-4 fw-bold text-">Code with the SBCC Community</h2>
+                <div class="row g-5 py-5 row-cols-1 row-cols-lg-3">
+                    <div class="col d-flex align-items-start text-left">
+                        <div
+                            class="icon-square text-body-emphasis bg-body-secondary d-inline-flex align-items-center justify-content-center fs-4 flex-shrink-0 me-4">
+                            <img src="./svg/who.svg">
+                        </div>
+                        <div>
+                            <h3 class="fs-2 text-body-emphasis text-left">Who are we?</h3>
+                            <p>SBCC students who see the potential in making websites that can help SBCC students. From
+                                study tools to event and social
+                                websites meant for students, the goal of the club is to serve the SBCC community with our
+                                innovations.</p>
+                        </div>
+                    </div>
+                    <div class="col d-flex align-items-start text-left">
+                        <div
+                            class="icon-square text-body-emphasis bg-body-secondary d-inline-flex align-items-center justify-content-center fs-4 flex-shrink-0 me-4">
+                            <img src="./svg/offer.svg">
+                        </div>
+                        <div>
+                            <h3 class="fs-2 text-body-emphasis text-left">What we will offer?</h3>
+                            <p>We will have workshops that teach almost everything about web development and system design,
+                                from basics to industry-standard technologies. Connect with like-minded peers and
+                                professionals, expanding your network in the tech industry.</p>
+                        </div>
+                    </div>
+                    <div class="col d-flex align-items-start text-left">
+                        <div
+                            class="icon-square text-body-emphasis bg-body-secondary d-inline-flex align-items-center justify-content-center fs-4 flex-shrink-0 me-4">
+                            <img src="./svg/people.svg">
+                        </div>
+                        <div>
+                            <h3 class="fs-2 text-body-emphasis text-left">Why you should join</h3>
+                            <p>Gain hands-on experience with web development, system design, and modern technologies. Work
+                                on real-world projects that you can showcase to potential employers. Develop your ability to
+                                work effectively in a team setting, mimicking real-world job scenarios.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        
+    
+
+
+    <section id="footer">
+        <footer class="footer">
+            <div class="footer-content-wrapper">
+                <div class="footer-content">
+                    <img src="./footers/mongodb.png" alt="Logo 3">
+                    <img src="./footers/express.png" alt="Logo 3">
+                    <img src="./footers/jquery.png" alt="Logo 3">
+                    <img src="./footers/sql.png" alt="Logo 4">
+                    <img src="./footers/nodejs.png" alt="Logo 2">
+                    <img src="./footers/bootstrap.png" alt="Logo 5">
+                    <img src="./footers/js.png" alt="Logo 6">
+                    <img src="./footers/html.png" alt="Logo 1">
+                    <img src="./footers/css.png" alt="Logo 2">
+                    <img src="./footers/react.png" alt="Logo 2">
+                    <img src="./footers/gitblack.png" alt="Logo 2">
+                    <span>© 2024 SBCC Web Development Club.</span>
+                </div>
+                <div class="footer-content">
+                    <img src="./footers/mongodb.png" alt="Logo 3">
+                    <img src="./footers/express.png" alt="Logo 3">
+                    <img src="./footers/jquery.png" alt="Logo 3">
+                    <img src="./footers/sql.png" alt="Logo 4">
+                    <img src="./footers/nodejs.png" alt="Logo 2">
+                    <img src="./footers/bootstrap.png" alt="Logo 5">
+                    <img src="./footers/js.png" alt="Logo 6">
+                    <img src="./footers/html.png" alt="Logo 1">
+                    <img src="./footers/css.png" alt="Logo 2">
+                    <img src="./footers/react.png" alt="Logo 2">
+                    <img src="./footers/gitblack.png" alt="Logo 2">
+                    <span>© 2024 SBCC Web Development Club.</span>
+                </div>
+                <div class="footer-content">
+                    <img src="./footers/mongodb.png" alt="Logo 3">
+                    <img src="./footers/express.png" alt="Logo 3">
+                    <img src="./footers/jquery.png" alt="Logo 3">
+                    <img src="./footers/sql.png" alt="Logo 4">
+                    <img src="./footers/nodejs.png" alt="Logo 2">
+                    <img src="./footers/bootstrap.png" alt="Logo 5">
+                    <img src="./footers/js.png" alt="Logo 6">
+                    <img src="./footers/html.png" alt="Logo 1">
+                    <img src="./footers/css.png" alt="Logo 2">
+                    <img src="./footers/react.png" alt="Logo 2">
+                    <img src="./footers/gitblack.png" alt="Logo 2">
+                    <span>© 2024 SBCC Web Development Club.</span>
+                </div>
+                <div class="footer-content">
+                    <img src="./footers/mongodb.png" alt="Logo 3">
+                    <img src="./footers/express.png" alt="Logo 3">
+                    <img src="./footers/jquery.png" alt="Logo 3">
+                    <img src="./footers/sql.png" alt="Logo 4">
+                    <img src="./footers/nodejs.png" alt="Logo 2">
+                    <img src="./footers/bootstrap.png" alt="Logo 5">
+                    <img src="./footers/js.png" alt="Logo 6">
+                    <img src="./footers/html.png" alt="Logo 1">
+                    <img src="./footers/css.png" alt="Logo 2">
+                    <img src="./footers/react.png" alt="Logo 2">
+                    <img src="./footers/gitblack.png" alt="Logo 2">
+                    <span>© 2024 SBCC Web Development Club.</span>
+                </div>
+                <div class="footer-content">
+                    <img src="./footers/mongodb.png" alt="Logo 3">
+                    <img src="./footers/express.png" alt="Logo 3">
+                    <img src="./footers/jquery.png" alt="Logo 3">
+                    <img src="./footers/sql.png" alt="Logo 4">
+                    <img src="./footers/nodejs.png" alt="Logo 2">
+                    <img src="./footers/bootstrap.png" alt="Logo 5">
+                    <img src="./footers/js.png" alt="Logo 6">
+                    <img src="./footers/html.png" alt="Logo 1">
+                    <img src="./footers/css.png" alt="Logo 2">
+                    <img src="./footers/react.png" alt="Logo 2">
+                    <img src="./footers/gitblack.png" alt="Logo 2">
+                    <span>© 2024 SBCC Web Development Club.</span>
+                </div>
+                <div class="footer-content">
+                    <img src="./footers/mongodb.png" alt="Logo 3">
+                    <img src="./footers/express.png" alt="Logo 3">
+                    <img src="./footers/jquery.png" alt="Logo 3">
+                    <img src="./footers/sql.png" alt="Logo 4">
+                    <img src="./footers/nodejs.png" alt="Logo 2">
+                    <img src="./footers/bootstrap.png" alt="Logo 5">
+                    <img src="./footers/js.png" alt="Logo 6">
+                    <img src="./footers/html.png" alt="Logo 1">
+                    <img src="./footers/css.png" alt="Logo 2">
+                    <img src="./footers/react.png" alt="Logo 2">
+                    <img src="./footers/gitblack.png" alt="Logo 2">
+                    <span>© 2024 SBCC Web Development Club.</span>
+                </div>
+                <div class="footer-content">
+                    <img src="./footers/mongodb.png" alt="Logo 3">
+                    <img src="./footers/express.png" alt="Logo 3">
+                    <img src="./footers/jquery.png" alt="Logo 3">
+                    <img src="./footers/sql.png" alt="Logo 4">
+                    <img src="./footers/nodejs.png" alt="Logo 2">
+                    <img src="./footers/bootstrap.png" alt="Logo 5">
+                    <img src="./footers/js.png" alt="Logo 6">
+                    <img src="./footers/html.png" alt="Logo 1">
+                    <img src="./footers/css.png" alt="Logo 2">
+                    <img src="./footers/react.png" alt="Logo 2">
+                    <img src="./footers/gitblack.png" alt="Logo 2">
+                    <span>© 2024 SBCC Web Development Club.</span>
+                </div>
+                <div class="footer-content">
+                    <img src="./footers/mongodb.png" alt="Logo 3">
+                    <img src="./footers/express.png" alt="Logo 3">
+                    <img src="./footers/jquery.png" alt="Logo 3">
+                    <img src="./footers/sql.png" alt="Logo 4">
+                    <img src="./footers/nodejs.png" alt="Logo 2">
+                    <img src="./footers/bootstrap.png" alt="Logo 5">
+                    <img src="./footers/js.png" alt="Logo 6">
+                    <img src="./footers/html.png" alt="Logo 1">
+                    <img src="./footers/css.png" alt="Logo 2">
+                    <img src="./footers/react.png" alt="Logo 2">
+                    <img src="./footers/gitblack.png" alt="Logo 2">
+                    <span>© 2024 SBCC Web Development Club.</span>
+                </div>
+                <div class="footer-content">
+                    <img src="./footers/mongodb.png" alt="Logo 3">
+                    <img src="./footers/express.png" alt="Logo 3">
+                    <img src="./footers/jquery.png" alt="Logo 3">
+                    <img src="./footers/sql.png" alt="Logo 4">
+                    <img src="./footers/nodejs.png" alt="Logo 2">
+                    <img src="./footers/bootstrap.png" alt="Logo 5">
+                    <img src="./footers/js.png" alt="Logo 6">
+                    <img src="./footers/html.png" alt="Logo 1">
+                    <img src="./footers/css.png" alt="Logo 2">
+                    <img src="./footers/react.png" alt="Logo 2">
+                    <img src="./footers/gitblack.png" alt="Logo 2">
+                    <span>© 2024 SBCC Web Development Club.</span>
+                </div>
+                <div class="footer-content">
+                    <img src="./footers/mongodb.png" alt="Logo 3">
+                    <img src="./footers/express.png" alt="Logo 3">
+                    <img src="./footers/jquery.png" alt="Logo 3">
+                    <img src="./footers/sql.png" alt="Logo 4">
+                    <img src="./footers/nodejs.png" alt="Logo 2">
+                    <img src="./footers/bootstrap.png" alt="Logo 5">
+                    <img src="./footers/js.png" alt="Logo 6">
+                    <img src="./footers/html.png" alt="Logo 1">
+                    <img src="./footers/css.png" alt="Logo 2">
+                    <img src="./footers/react.png" alt="Logo 2">
+                    <img src="./footers/gitblack.png" alt="Logo 2">
+                    <span>© 2024 SBCC Web Development Club.</span>
+                </div>
+            </div>
+        </footer>
+    </section>
+
+    <!-- Bootstrap JavaScript bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+    <script src="index.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,37 @@
+.gradient-background {
+    background: linear-gradient(300deg, black, grey, white, red);
+    background-size: 180% 180%;
+    animation: gradient-animation 18s ease infinite;
+}
+
+@keyframes gradient-animation {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+.icon-square {
+    width: 3rem;
+    height: 3rem;
+    border-radius: 0.75rem;
+}
+
+.profile-img {
+    height: 100px;
+    border-radius: 50%;
+}
+.gradient-background-2 {
+    background: linear-gradient(to top, rgba(0, 0, 200, .6), rgba(255, 255, 255, 1)),
+        url('./background-images/sea-spray-frances-marie.jpg') no-repeat center center/cover;
+    background-size: cover;
+    background-position: center;
+    padding: 50px 0;
+}
