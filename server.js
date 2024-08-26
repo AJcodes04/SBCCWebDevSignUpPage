@@ -33,7 +33,7 @@ const writeData = (data) => {
 };
 
 // Route to handle form submissions
-app.post('/register', (req, res) => {
+app.post('/api/register', (req, res) => {
     const { firstName, lastName, email, role } = req.body;
 
     // Validate all required fields
