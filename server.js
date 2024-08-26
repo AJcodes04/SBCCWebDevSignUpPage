@@ -15,8 +15,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // Middleware to parse JSON data
 app.use(bodyParser.json());
 
-// Path to the JSON file where user data will be stored
-const dataFilePath = path.join(__dirname, 'data.json');
+// Path to the JSON file where user data will be stored on the persistent disk
+const dataFilePath = path.join('/data', 'data.json'); // Assuming /data is your mount path
 
 // Helper function to read data from the JSON file
 const readData = () => {
@@ -25,7 +25,7 @@ const readData = () => {
         return JSON.parse(data);
     } else {
         console.log('data.json does not exist. Creating a new one...');
-        fs.writeFileSync(dataFilePath, '[]', 'utf-8'); // Create an empty array if file doesn't exist
+        fs.writeFileSync(dataFilePath, '[]', 'utf-8'); // Initialize with an empty array if file doesn't exist
         return [];
     }
 };
