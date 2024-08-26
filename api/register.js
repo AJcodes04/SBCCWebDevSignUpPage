@@ -1,20 +1,29 @@
 const fs = require('fs');
 const path = require('path');
 
+// Path to the JSON file where user data will be stored
+const dataFilePath = path.join(process.cwd(), 'data.json');
+
 // Helper function to read data from the JSON file
 const readData = () => {
-    const dataFilePath = path.join(process.cwd(), 'data.json'); // Correctly path to data.json in the root
     if (fs.existsSync(dataFilePath)) {
         const data = fs.readFileSync(dataFilePath, 'utf-8');
         return JSON.parse(data);
+    } else {
+        console.log('data.json does not exist. Creating a new one...');
+        fs.writeFileSync(dataFilePath, '[]', 'utf-8'); // Initialize with an empty array if file doesn't exist
+        return [];
     }
-    return [];
 };
 
 // Helper function to write data to the JSON file
 const writeData = (data) => {
-    const dataFilePath = path.join(process.cwd(), 'data.json'); // Correctly path to data.json in the root
-    fs.writeFileSync(dataFilePath, JSON.stringify(data, null, 2), 'utf-8');
+    try {
+        fs.writeFileSync(dataFilePath, JSON.stringify(data, null, 2), 'utf-8');
+        console.log('Data successfully written to', dataFilePath);
+    } catch (error) {
+        console.error('Error writing data:', error);
+    }
 };
 
 export default (req, res) => {
