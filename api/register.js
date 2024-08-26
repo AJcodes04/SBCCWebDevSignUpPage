@@ -6,13 +6,23 @@ const dataFilePath = path.join('/data', 'data.json'); // Assuming /data is your 
 
 // Helper function to read data from the JSON file
 const readData = () => {
-    if (fs.existsSync(dataFilePath)) {
-        const data = fs.readFileSync(dataFilePath, 'utf-8');
-        return JSON.parse(data);
-    } else {
-        console.log('data.json does not exist. Creating a new one...');
-        fs.writeFileSync(dataFilePath, '[]', 'utf-8'); // Initialize with an empty array if file doesn't exist
-        return [];
+    try {
+        if (fs.existsSync(dataFilePath)) {
+            const stat = fs.statSync(dataFilePath);
+            if (stat.isFile()) {
+                const data = fs.readFileSync(dataFilePath, 'utf-8');
+                return JSON.parse(data);
+            } else {
+                throw new Error(`${dataFilePath} is a directory, not a file.`);
+            }
+        } else {
+            console.log('data.json does not exist. Creating a new one...');
+            fs.writeFileSync(dataFilePath, '[]', 'utf-8'); // Initialize with an empty array if the file doesn't exist
+            return [];
+        }
+    } catch (error) {
+        console.error('Error reading data:', error);
+        throw error; // Re-throw the error after logging it
     }
 };
 
