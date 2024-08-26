@@ -1,8 +1,8 @@
 const fs = require('fs');
 const path = require('path');
 
-// Path to the JSON file where user data will be stored
-const dataFilePath = path.join(process.cwd(), 'data.json');
+// Path to the JSON file where user data will be stored on the persistent disk
+const dataFilePath = path.join('/data', 'data.json'); // Assuming /data is your mount path
 
 // Helper function to read data from the JSON file
 const readData = () => {
@@ -57,3 +57,4 @@ export default (req, res) => {
         res.status(405).json({ success: false, message: 'Method not allowed' });
     }
 };
+
