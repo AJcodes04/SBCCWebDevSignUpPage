@@ -3,11 +3,8 @@ const bodyParser = require('body-parser');
 const fs = require('fs');
 const path = require('path');
 
-const dataFilePath = path.join(process.cwd(), 'data.json');
-
-
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 // Serve static files from the root directory
 app.use(express.static(path.join(__dirname)));
@@ -41,7 +38,7 @@ app.post('/register', (req, res) => {
 
     // Validate all required fields
     if (!firstName || !lastName || !email || !role) {
-        return res.status(400).json({ success: false, message: 'Please select either Member or Officer.' });
+        return res.status(400).json({ success: false, message: 'All fields are required.' });
     }
 
     // Read existing data
