@@ -23,13 +23,21 @@ const readData = () => {
     if (fs.existsSync(dataFilePath)) {
         const data = fs.readFileSync(dataFilePath, 'utf-8');
         return JSON.parse(data);
+    } else {
+        console.log('data.json does not exist. Creating a new one...');
+        fs.writeFileSync(dataFilePath, '[]', 'utf-8'); // Create an empty array if file doesn't exist
+        return [];
     }
-    return [];
 };
 
 // Helper function to write data to the JSON file
 const writeData = (data) => {
-    fs.writeFileSync(dataFilePath, JSON.stringify(data, null, 2), 'utf-8');
+    try {
+        fs.writeFileSync(dataFilePath, JSON.stringify(data, null, 2), 'utf-8');
+        console.log('Data successfully written to', dataFilePath);
+    } catch (error) {
+        console.error('Error writing data:', error);
+    }
 };
 
 // Route to handle form submissions
