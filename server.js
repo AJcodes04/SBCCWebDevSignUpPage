@@ -16,7 +16,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 // Path to the JSON file where user data will be stored on the persistent disk
-const dataFilePath = path.join('/data', 'data.json'); // Assuming /data is your mount path
+const dataFilePath = path.join('/data', '/data.json'); // Assuming /data is your mount path
 
 // Helper function to read data from the JSON file
 const readData = () => {
