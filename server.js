@@ -1,6 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const fs = require('fs');
+const fs = require('fs').promises;
 const path = require('path');
 
 const app = express();
@@ -15,85 +15,98 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // Middleware to parse JSON data
 app.use(bodyParser.json());
 
-// Path to the JSON file where user data will be stored on the persistent disk
-const dataFilePath = path.join('/data', 'data.json'); // Assuming /data is your mount path
+// Path to the JSON file where user data will be stored
+const dataFilePath = process.env.RENDER_DISK_PATH 
+  ? path.join(process.env.RENDER_DISK_PATH, 'data.json')
+  : path.join(__dirname, 'data.json');
+
+console.log('Data file path:', dataFilePath);
+
+// Helper function to ensure directory exists
+const ensureDirectoryExistence = async (filePath) => {
+  const dirname = path.dirname(filePath);
+  try {
+    await fs.access(dirname);
+  } catch (error) {
+    if (error.code === 'ENOENT') {
+      await fs.mkdir(dirname, { recursive: true });
+    } else {
+      throw error;
+    }
+  }
+};
 
 // Helper function to read data from the JSON file
-const readData = () => {
-    console.log('Attempting to read data from:', dataFilePath);
-    try {
-        if (fs.existsSync(dataFilePath)) {
-            const stat = fs.statSync(dataFilePath);
-            if (stat.isFile()) {
-                const data = fs.readFileSync(dataFilePath, 'utf-8');
-                console.log('Successfully read data:', data);
-                return JSON.parse(data);
-            } else {
-                console.error('Error: Expected a file but found a directory:', dataFilePath);
-                throw new Error(`${dataFilePath} is a directory, not a file.`);
-            }
-        } else {
-            console.log('data.json does not exist. Creating a new one...');
-            fs.writeFileSync(dataFilePath, '[]', 'utf-8'); // Initialize with an empty array if the file doesn't exist
-            return [];
-        }
-    } catch (error) {
-        console.error('Error reading data:', error);
-        throw error; // Re-throw the error after logging it
+const readData = async () => {
+  console.log('Attempting to read data from:', dataFilePath);
+  try {
+    await ensureDirectoryExistence(dataFilePath);
+    const data = await fs.readFile(dataFilePath, 'utf-8');
+    console.log('Successfully read data');
+    return JSON.parse(data);
+  } catch (error) {
+    if (error.code === 'ENOENT') {
+      console.log('data.json does not exist. Creating a new one...');
+      await fs.writeFile(dataFilePath, '[]', 'utf-8');
+      return [];
     }
+    console.error('Error reading data:', error);
+    throw error;
+  }
 };
 
 // Helper function to write data to the JSON file
-const writeData = (data) => {
-    console.log('Attempting to write data to:', dataFilePath);
-    try {
-        fs.writeFileSync(dataFilePath, JSON.stringify(data, null, 2), 'utf-8');
-        console.log('Data successfully written to', dataFilePath);
-    } catch (error) {
-        console.error('Error writing data:', error);
-        throw error; // Re-throw the error after logging it
-    }
+const writeData = async (data) => {
+  console.log('Attempting to write data to:', dataFilePath);
+  try {
+    await ensureDirectoryExistence(dataFilePath);
+    await fs.writeFile(dataFilePath, JSON.stringify(data, null, 2), 'utf-8');
+    console.log('Data successfully written');
+  } catch (error) {
+    console.error('Error writing data:', error);
+    throw error;
+  }
 };
 
 // Route to handle form submissions
-app.post('/api/register', (req, res) => {
-    console.log('Received registration request:', req.body);
-    try {
-        const { firstName, lastName, email, role } = req.body;
-
-        // Validate all required fields
-        if (!firstName || !lastName || !email || !role) {
-            console.error('Validation failed: Missing fields');
-            return res.status(400).json({ success: false, message: 'All fields are required.' });
-        }
-
-        // Read existing data
-        const users = readData();
-
-        // Check if the email is already registered
-        const existingUser = users.find(user => user.email === email);
-        if (existingUser) {
-            console.error('Validation failed: Email already registered');
-            return res.status(400).json({ success: false, message: 'This email is already registered.' });
-        }
-
-        // Add new user to the list
-        const newUser = { firstName, lastName, email, role };
-        users.push(newUser);
-
-        // Write updated data back to the file
-        writeData(users);
-
-        // Send a success response
-        console.log('Registration successful for:', email);
-        res.json({ success: true, message: 'Successfully registered!' });
-    } catch (error) {
-        console.error('Error processing registration:', error);
-        res.status(500).json({ success: false, message: 'Internal Server Error' });
+app.post('/api/register', async (req, res) => {
+  console.log('Received registration request:', req.body);
+  try {
+    const { firstName, lastName, email, role } = req.body;
+    
+    // Validate all required fields
+    if (!firstName || !lastName || !email || !role) {
+      console.error('Validation failed: Missing fields');
+      return res.status(400).json({ success: false, message: 'All fields are required.' });
     }
+    
+    // Read existing data
+    const users = await readData();
+    
+    // Check if the email is already registered
+    const existingUser = users.find(user => user.email === email);
+    if (existingUser) {
+      console.error('Validation failed: Email already registered');
+      return res.status(400).json({ success: false, message: 'This email is already registered.' });
+    }
+    
+    // Add new user to the list
+    const newUser = { firstName, lastName, email, role };
+    users.push(newUser);
+    
+    // Write updated data back to the file
+    await writeData(users);
+    
+    // Send a success response
+    console.log('Registration successful for:', email);
+    res.json({ success: true, message: 'Successfully registered!' });
+  } catch (error) {
+    console.error('Error processing registration:', error);
+    res.status(500).json({ success: false, message: 'Internal Server Error' });
+  }
 });
 
 // Start the server
 app.listen(port, () => {
-    console.log(`Server running at http://localhost:${port}`);
+  console.log(`Server running at http://localhost:${port}`);
 });
