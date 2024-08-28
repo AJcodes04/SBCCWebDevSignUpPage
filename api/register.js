@@ -1,31 +1,27 @@
 const fs = require('fs').promises;
 const path = require('path');
 
-const renderDiskPath = process.env.RENDER_DISK_PATH || process.cwd();
-const dataFilePath = path.join(renderDiskPath, 'data', 'data.json');
-
-console.log('Using data file path:', dataFilePath);
+const dataFilePath = process.env.RENDER_DISK_PATH
+  ? path.join(process.env.RENDER_DISK_PATH, 'data', 'data.json')
+  : path.join(process.cwd(), 'data', 'data.json');
 
 const ensureDirectoryExists = async () => {
   const dir = path.dirname(dataFilePath);
-  console.log('Ensuring directory exists:', dir);
   try {
     await fs.access(dir);
   } catch {
-    console.log('Directory does not exist, creating:', dir);
     await fs.mkdir(dir, { recursive: true });
   }
 };
 
 const readData = async () => {
   try {
-    console.log('Reading data from:', dataFilePath);
     await fs.access(dataFilePath);
     const data = await fs.readFile(dataFilePath, 'utf-8');
     return JSON.parse(data);
   } catch (error) {
     if (error.code === 'ENOENT') {
-      console.log('File does not exist, creating new file at:', dataFilePath);
+      await ensureDirectoryExists();
       await fs.writeFile(dataFilePath, '[]', 'utf-8');
       return [];
     }
@@ -34,15 +30,13 @@ const readData = async () => {
 };
 
 const writeData = async (data) => {
-  console.log('Writing data to:', dataFilePath);
+  await ensureDirectoryExists();
   await fs.writeFile(dataFilePath, JSON.stringify(data, null, 2), 'utf-8');
 };
 
 export default async (req, res) => {
   if (req.method === 'POST') {
     try {
-      await ensureDirectoryExists();
-
       const { firstName, lastName, email, role } = req.body;
 
       if (!firstName || !lastName || !email || !role) {
