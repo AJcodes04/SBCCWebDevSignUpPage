@@ -16,7 +16,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 // Path to the JSON file where user data will be stored
-const dataFilePath = path.join(__dirname, 'data.json'); // Local path for VScode
+const dataFilePath = path.join(__dirname, 'data/data.json'); // Local path for VScode
 
 console.log('Data file path:', dataFilePath);
 
