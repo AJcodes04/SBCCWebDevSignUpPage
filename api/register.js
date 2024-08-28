@@ -2,7 +2,7 @@ const fs = require('fs').promises;
 const path = require('path');
 
 const dataFilePath = process.env.RENDER_DISK_PATH 
-  ? path.join(process.env.RENDER_DISK_PATH, 'data.json')
+  ? path.join(process.env.RENDER_DISK_PATH, 'data/data.json')
   : path.join(process.cwd(), 'data', 'data.json');
 
 const ensureDirectoryExists = async () => {
