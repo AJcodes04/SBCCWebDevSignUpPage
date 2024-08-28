@@ -1,29 +1,31 @@
 const fs = require('fs').promises;
 const path = require('path');
 
-const dataFilePath = process.env.RENDER_DISK_PATH 
-  ? path.join(process.env.RENDER_DISK_PATH, 'data.json')
-  : path.join(process.cwd(), 'data', 'data/data.json');
+const renderDiskPath = process.env.RENDER_DISK_PATH || process.cwd();
+const dataFilePath = path.join(renderDiskPath, 'data', 'data.json');
 
-console.log("Data file path:", dataFilePath, process.env.RENDER_DISK_PATH );
-
+console.log('Using data file path:', dataFilePath);
 
 const ensureDirectoryExists = async () => {
   const dir = path.dirname(dataFilePath);
+  console.log('Ensuring directory exists:', dir);
   try {
     await fs.access(dir);
   } catch {
+    console.log('Directory does not exist, creating:', dir);
     await fs.mkdir(dir, { recursive: true });
   }
 };
 
 const readData = async () => {
   try {
+    console.log('Reading data from:', dataFilePath);
     await fs.access(dataFilePath);
     const data = await fs.readFile(dataFilePath, 'utf-8');
     return JSON.parse(data);
   } catch (error) {
     if (error.code === 'ENOENT') {
+      console.log('File does not exist, creating new file at:', dataFilePath);
       await fs.writeFile(dataFilePath, '[]', 'utf-8');
       return [];
     }
@@ -32,6 +34,7 @@ const readData = async () => {
 };
 
 const writeData = async (data) => {
+  console.log('Writing data to:', dataFilePath);
   await fs.writeFile(dataFilePath, JSON.stringify(data, null, 2), 'utf-8');
 };
 
@@ -39,25 +42,25 @@ export default async (req, res) => {
   if (req.method === 'POST') {
     try {
       await ensureDirectoryExists();
-      
+
       const { firstName, lastName, email, role } = req.body;
-      
+
       if (!firstName || !lastName || !email || !role) {
         return res.status(400).json({ success: false, message: 'All fields are required.' });
       }
-      
+
       const users = await readData();
-      
+
       const existingUser = users.find(user => user.email === email);
       if (existingUser) {
         return res.status(400).json({ success: false, message: 'This email is already registered.' });
       }
-      
+
       const newUser = { firstName, lastName, email, role };
       users.push(newUser);
-      
+
       await writeData(users);
-      
+
       res.json({ success: true, message: 'Successfully registered!' });
     } catch (error) {
       console.error('Registration error:', error);
