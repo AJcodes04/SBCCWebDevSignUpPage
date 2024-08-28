@@ -3,7 +3,7 @@ const path = require('path');
 
 const dataFilePath = process.env.RENDER_DISK_PATH 
   ? path.join(process.env.RENDER_DISK_PATH, 'data.json')
-  : path.join(process.cwd(), 'data', 'data.json');
+  : path.join(process.cwd(), 'data', 'data/data.json');
 
 console.log("Data file path:", dataFilePath, process.env.RENDER_DISK_PATH );
 
