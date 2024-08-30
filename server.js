@@ -16,29 +16,29 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 // Path to the JSON file where user data will be stored
-const dataFilePath = process.env.RENDER_DISK_PATH
-  ? path.join(process.env.RENDER_DISK_PATH, 'data', 'data.json')
-  : path.join(process.cwd(), 'data', 'data.json');
+const dataDirectory = process.env.RENDER_DISK_PATH
+  ? path.join(process.env.RENDER_DISK_PATH, 'data')
+  : path.join(process.cwd(), 'data');
+
+const dataFilePath = path.join(dataDirectory, 'data.json');
 
 // Ensure the directory exists
 const ensureDirectoryExists = async () => {
-    const dir = path.dirname(dataFilePath);
     try {
-        await fs.access(dir);
+        await fs.access(dataDirectory);
     } catch {
-        await fs.mkdir(dir, { recursive: true });
+        await fs.mkdir(dataDirectory, { recursive: true });
     }
 };
 
 // Helper function to read data from the JSON file
 const readData = async () => {
     try {
-        await fs.access(dataFilePath);
+        await ensureDirectoryExists();
         const data = await fs.readFile(dataFilePath, 'utf-8');
         return JSON.parse(data);
     } catch (error) {
         if (error.code === 'ENOENT') {
-            await ensureDirectoryExists();
             await fs.writeFile(dataFilePath, '[]', 'utf-8');
             return [];
         }
@@ -62,16 +62,13 @@ app.post('/api/register', async (req, res) => {
             return res.status(400).json({ success: false, message: 'All fields are required.' });
         }
 
-        // Read existing data
         const users = await readData();
 
-        // Check if the email is already registered
         const existingUser = users.find(user => user.email === email);
         if (existingUser) {
             return res.status(400).json({ success: false, message: 'This email is already registered.' });
         }
 
-        // Add new user to the list
         const newUser = { firstName, lastName, email, role };
         users.push(newUser);
 
@@ -83,7 +80,6 @@ app.post('/api/register', async (req, res) => {
 
         console.log('Registration successful for:', email);
 
-        // Send a success response
         res.json({ success: true, message: 'Successfully registered!' });
     } catch (error) {
         console.error('Error processing registration:', error);
