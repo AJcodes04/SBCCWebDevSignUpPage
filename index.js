@@ -3,6 +3,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const officerBtn = document.getElementById('officer-btn');
     const roleInput = document.getElementById('role');
     const emailInput = document.getElementById('email');
+    const firstNameInput = document.getElementById('first-name');
+    const lastNameInput = document.getElementById('last-name');
     const registerForm = document.getElementById('registerForm');
     const loadingSpinner = document.getElementById('loadingSpinner');
 
@@ -45,20 +47,64 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Handle form submission with loading animation
+    // Function to validate form fields
+    function validateForm() {
+        const roleSelected = roleInput.value !== '';
+        const firstNameFilled = firstNameInput.value.trim() !== '';
+        const lastNameFilled = lastNameInput.value.trim() !== '';
+        const emailFilled = emailInput.value.trim() !== '';
+
+        return roleSelected && firstNameFilled && lastNameFilled && emailFilled;
+    }
+
+    // Handle form submission with loading animation and user-friendly error handling
     registerForm.addEventListener('submit', (event) => {
         event.preventDefault(); // Prevent the default form submission behavior
+
+        // Validate form fields
+        if (!validateForm()) {
+            alert('Please fill out all fields and select either Member or Officer.');
+            return; // Do not proceed if validation fails
+        }
 
         // Hide the form and show the loading spinner
         registerForm.style.display = 'none';
         loadingSpinner.style.display = 'block';
 
-        // Allow the form to submit after showing the loading spinner
-        setTimeout(() => {
-            if (!isNavigatingAway) {
-                registerForm.submit(); // Submit the form to the server
+        // Prepare form data for sending
+        const formData = {
+            firstName: firstNameInput.value.trim(),
+            lastName: lastNameInput.value.trim(),
+            email: emailInput.value.trim(),
+            role: roleInput.value
+        };
+
+        // Send form data to the server using fetch API
+        fetch('/api/register', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(formData)
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Redirect to the thank-you page after successful registration
+                window.location.href = 'thank-you.html';
+            } else {
+                // Show a user-friendly error message
+                alert(data.message || 'Registration failed. Please try again.');
+                loadingSpinner.style.display = 'none';
+                registerForm.style.display = 'block';
             }
-        }, 2000); // Adjust the delay as needed
+        })
+        .catch(error => {
+            console.error('Error during registration:', error);
+            alert('An error occurred. Please try again later.');
+            loadingSpinner.style.display = 'none';
+            registerForm.style.display = 'block';
+        });
     });
 
     // Detect when the user is navigating away from the page
