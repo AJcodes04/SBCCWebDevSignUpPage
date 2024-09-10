@@ -49,13 +49,31 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Function to validate form fields
     function validateForm() {
-        const roleSelected = roleInput.value !== '';
-        const firstNameFilled = firstNameInput.value.trim() !== '';
-        const lastNameFilled = lastNameInput.value.trim() !== '';
-        const emailFilled = emailInput.value.trim() !== '';
+    const roleSelected = roleInput.value !== '';
+    const firstNameFilled = firstNameInput.value.trim() !== '' && firstNameInput.value.length <= 50; // Max 50 characters
+    const lastNameFilled = lastNameInput.value.trim() !== '' && lastNameInput.value.length <= 50;  // Max 50 characters
+    const emailFilled = emailInput.value.trim() !== '' && /^[^\s@]+@pipeline\.sbcc\.edu$/.test(emailInput.value) && emailInput.value.length <= 100; // Check @pipeline.sbcc.edu email
 
-        return roleSelected && firstNameFilled && lastNameFilled && emailFilled;
+    // Check each condition and show specific alerts
+    if (!roleSelected) {
+        alert('Please select either Member or Officer.');
+        return false;
     }
+    if (!firstNameFilled) {
+        alert('Please enter a valid first name (max 50 characters).');
+        return false;
+    }
+    if (!lastNameFilled) {
+        alert('Please enter a valid last name (max 50 characters).');
+        return false;
+    }
+    if (!emailFilled) {
+        alert('Please enter a valid @pipeline.sbcc.edu email address.');
+        return false;
+    }
+
+    return true;
+}
 
     // Handle form submission with loading animation and user-friendly error handling
     registerForm.addEventListener('submit', (event) => {
