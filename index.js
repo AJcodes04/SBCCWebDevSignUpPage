@@ -20,14 +20,14 @@ document.addEventListener('DOMContentLoaded', () => {
         // Highlight the selected button and reset the other
         if (role === 'Member') {
             memberBtn.classList.add('btn-primary');
-            memberBtn.classList.remove('btn-pink');
-            officerBtn.classList.remove('btn-primary');
-            officerBtn.classList.add('btn-secondary');
+            memberBtn.classList.remove('btn-dark');
+            officerBtn.classList.remove('btn-dark');
+            officerBtn.classList.add('btn-dark');
         } else if (role === 'Officer') {
             officerBtn.classList.add('btn-primary');
-            officerBtn.classList.remove('btn-secondary');
+            officerBtn.classList.remove('btn-dark');
             memberBtn.classList.remove('btn-primary');
-            memberBtn.classList.add('btn-pink');
+            memberBtn.classList.add('btn-dark');
         }
     }
 
